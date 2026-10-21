@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conecta tu Gmail</title>
+<style>
+:root{--bg:#eef2f1;--card:#fff;--ink:#17302b;--muted:#566b66;--accent:#1f6f5c;--on:#fff;--line:#cfdad7;--err:#a4381f;color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1816;--card:#17231f;--ink:#e6f0ed;--muted:#9bb0aa;--accent:#4cc0a0;--on:#06211a;--line:#2b3d38;--err:#ff9b80;color-scheme:dark}}
+html,body{height:100%}
+body{margin:0;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{width:min(440px,92vw);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px 26px;display:flex;flex-direction:column;gap:14px}
+h1{margin:0;font-size:1.5rem;line-height:1.2}
+p{margin:0;color:var(--muted)}
+a.btn{display:inline-block;align-self:flex-start;padding:12px 20px;border-radius:10px;background:var(--accent);color:var(--on);font-weight:600;text-decoration:none}
+a.btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.err{color:var(--err)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+// ===== CONFIGURA SOLO ESTAS DOS LÍNEAS =====
+var CLIENT_ID    = "770719375364-ds5o658grp820qotg2vqor7i3ji63o71.apps.googleusercontent.com";
+var REDIRECT_URI = "https://armandoparedes.app.n8n.cloud/webhook-test/oauth-callback"; // URL de producción del Webhook de n8n
+// ===========================================
+
+var app = document.getElementById("app");
+var q = new URLSearchParams(location.search);
+
+if (q.get("conectado")) {
+  app.innerHTML = "<h1>Gmail conectado</h1><p>Listo. Ya puedes cerrar esta página: tu cuenta quedó vinculada.</p>";
+} else if (q.get("error")) {
+  app.innerHTML = "<h1>No se pudo conectar</h1><p class='err'>La autorización no se completó. Inténtalo de nuevo.</p><a class='btn' href='index.html'>Volver a intentar</a>";
+} else {
+  var ready = CLIENT_ID.indexOf("PEGA_AQUI") === -1 && REDIRECT_URI.indexOf("TU-N8N") === -1;
+  var url = "https://accounts.google.com/o/oauth2/v2/auth?" + new URLSearchParams({
+    client_id: CLIENT_ID,
+    redirect_uri: REDIRECT_URI,
+    response_type: "code",
+    scope: "https://www.googleapis.com/auth/gmail.readonly",
+    access_type: "offline",
+    prompt: "consent"
+  }).toString();
+  app.innerHTML = "<h1>Conecta tu Gmail</h1><p>Autoriza una sola vez y revisaremos tus correos de forma automática. Tu contraseña la escribes en Google, nunca aquí.</p>" +
+    (ready ? "<a class='btn' href='" + url + "'>Conectar con Gmail</a>"
+           : "<p class='err'>Falta configurar CLIENT_ID y REDIRECT_URI al inicio del código.</p>");
+}
+</script>
+</body>
+</html>
