@@ -29,7 +29,7 @@ var app = document.getElementById("app");
 var q = new URLSearchParams(location.search);
 
 if (q.get("conectado")) {
-  app.innerHTML = "<h1>Gmail conectado</h1><p>Listo. Ya puedes cerrar esta página: tu cuenta quedó vinculada.</p>";
+  app.innerHTML = "<h1>¡Registro exitoso!</h1><p>Tu Gmail quedó conectado correctamente. En breve tu sistema empezará a funcionar de forma automática.</p><p>Ya puedes cerrar esta página.</p>";
 } else if (q.get("error")) {
   app.innerHTML = "<h1>No se pudo conectar</h1><p class='err'>La autorización no se completó. Inténtalo de nuevo.</p><a class='btn' href='index.html'>Volver a intentar</a>";
 } else {
